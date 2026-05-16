@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f5f0eb; color: #2d2d2d; min-height: 100vh; padding: 20px; }
+  header { background: #e63946; color: white; padding: 24px 20px 18px; border-radius: 16px; margin-bottom: 16px; text-align: center; }
+  header h1 { font-size: 1.6em; letter-spacing: 1px; }
+  header p { font-size: 0.9em; margin-top: 6px; opacity: 0.9; }
+  .badge { display: inline-block; background: rgba(255,255,255,0.25); border-radius: 20px; padding: 3px 12px; font-size: 0.75em; margin-top: 8px; letter-spacing: 1px; }
+  .lang-bar { display: flex; justify-content: center; gap: 10px; margin-bottom: 16px; }
+  .lang-btn { padding: 7px 22px; border-radius: 20px; border: 2px solid #e63946; background: white; color: #e63946; font-weight: 700; font-size: 0.88em; cursor: pointer; transition: all 0.15s; }
+  .lang-btn.active { background: #e63946; color: white; }
+  .card { background: white; border-radius: 14px; padding: 22px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .card h2 { font-size: 1em; color: #e63946; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  label { display: block; font-size: 0.88em; margin-bottom: 6px; color: #555; font-weight: 600; }
+  input[type="text"], input[type="email"], textarea, select { width: 100%; border: 2px solid #e0d8d0; border-radius: 9px; padding: 10px 12px; font-size: 0.9em; outline: none; transition: border 0.2s; background: #faf9f7; font-family: inherit; }
+  input:focus, textarea:focus, select:focus { border-color: #e63946; background: white; }
+  textarea { resize: vertical; min-height: 80px; }
+  .field { margin-bottom: 16px; }
+  .stars { display: flex; gap: 6px; margin-top: 4px; }
+  .stars span { font-size: 1.9em; cursor: pointer; color: #d0c8c0; transition: color 0.15s, transform 0.1s; line-height: 1; }
+  .stars span.active { color: #f4a261; }
+  .stars span:hover { transform: scale(1.2); }
+  .pill-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .pill input { display: none; }
+  .pill label { display: inline-block; padding: 6px 14px; border-radius: 20px; border: 2px solid #e0d8d0; cursor: pointer; font-size: 0.83em; font-weight: 600; color: #666; transition: all 0.15s; margin: 0; }
+  .pill input:checked + label { background: #e63946; border-color: #e63946; color: white; }
+  .pill label:hover { border-color: #e63946; color: #e63946; }
+  .emoji-scale { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+  .emoji-opt input { display: none; }
+  .emoji-opt label { display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 6px 10px; border: 2px solid #e0d8d0; border-radius: 12px; font-size: 0.75em; color: #888; transition: all 0.15s; margin: 0; min-width: 54px; }
+  .emoji-opt label .emo { font-size: 1.8em; }
+  .emoji-opt input:checked + label { border-color: #e63946; background: #fff0f0; color: #e63946; font-weight: 700; }
+  button[type="button"] { width: 100%; background: #e63946; color: white; border: none; border-radius: 12px; padding: 15px; font-size: 1.05em; font-weight: 700; cursor: pointer; letter-spacing: 0.5px; transition: background 0.2s, transform 0.1s; }
+  button[type="button"]:hover { background: #c1121f; transform: translateY(-1px); }
+  button[type="button"]:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+  #success { display: none; text-align: center; padding: 40px 20px; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  #success .big { font-size: 3em; }
+  #success h2 { color: #e63946; margin: 12px 0 8px; }
+  #success p { color: #666; font-size: 0.9em; }
+  .required-star { color: #e63946; }
+  .section-num { background: #e63946; color: white; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.78em; font-weight: 700; flex-shrink: 0; }
+  .progress-bar { background: #e0d8d0; border-radius: 10px; height: 6px; margin-bottom: 20px; overflow: hidden; }
+  .progress-fill { background: #e63946; height: 100%; width: 0%; border-radius: 10px; transition: width 0.4s; }
+  .char-count { font-size: 0.75em; color: #aaa; text-align: right; margin-top: 2px; }
+  .sending-msg { text-align:center; font-size:0.9em; color:#888; margin-top:10px; display:none; }
+  .error-msg { text-align:center; font-size:0.85em; color:#e63946; margin-top:10px; display:none; background:#fff0f0; padding:10px; border-radius:8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🔧 MakerConvent</h1>
+  <p id="hdr-sub">Explica'ns la teva experiència</p>
+  <span class="badge">Convent de Sant Agustí · Barcelona</span>
+</header>
+
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('ca')">Català</button>
+  <button class="lang-btn" onclick="setLang('es')">Castellano</button>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+<div id="form-wrapper">
+
+  <!-- 1 -->
+  <div class="card">
+    <h2><span class="section-num">1</span> <span data-t="s1title">Qui ets?</span></h2>
+    <div class="field">
+      <label data-t="tipus_label">Tipus de visitant <span class="required-star">*</span></label>
+      <div class="pill-group">
+        <div class="pill"><input type="radio" name="tipus" id="t1" value="Infant/Jove"><label for="t1">🧒 <span data-t="t_infant">Infant/Jove</span></label></div>
+        <div class="pill"><input type="radio" name="tipus" id="t2" value="Familiar"><label for="t2">👨‍👩‍👧 <span data-t="t_familiar">Familiar</span></label></div>
+        <div class="pill"><input type="radio" name="tipus" id="t3" value="Adult individual"><label for="t3">🙋 <span data-t="t_adult">Adult</span></label></div>
+        <div class="pill"><input type="radio" name="tipus" id="t4" value="Educador/a"><label for="t4">📚 <span data-t="t_edu">Educador/a</span></label></div>
+        <div class="pill"><input type="radio" name="tipus" id="t5" value="Veí/Veïna del barri"><label for="t5">🏘️ <span data-t="t_vei">Veí/Veïna</span></label></div>
+        <div class="pill"><input type="radio" name="tipus" id="t6" value="Visitant extern"><label for="t6">✈️ <span data-t="t_vis">Visitant extern</span></label></div>
+      </div>
+    </div>
+    <div class="field">
+      <label data-t="com_label">Com has conegut el MakerConvent?</label>
+      <div class="pill-group">
+        <div class="pill"><input type="radio" name="com" id="c1" value="Web"><label for="c1">🌐 Web</label></div>
+        <div class="pill"><input type="radio" name="com" id="c2" value="Xarxes socials"><label for="c2">📱 <span data-t="c_xarxes">Xarxes socials</span></label></div>
+        <div class="pill"><input type="radio" name="com" id="c3" value="Boca-orella"><label for="c3">👂 <span data-t="c_boca">Boca-orella</span></label></div>
+        <div class="pill"><input type="radio" name="com" id="c4" value="Escola/Institut"><label for="c4">🏫 <span data-t="c_escola">Escola</span></label></div>
+        <div class="pill"><input type="radio" name="com" id="c5" value="Passejant"><label for="c5">🚶 <span data-t="c_pass">Passejant</span></label></div>
+      </div>
+    </div>
+    <div class="field">
+      <label data-t="nom_label">Nom (opcional)</label>
+      <input type="text" id="nom" data-placeholder-t="nom_ph">
+    </div>
+    <div class="field">
+      <label data-t="email_label">Correu electrònic (opcional)</label>
+      <input type="email" id="email" data-placeholder-t="email_ph">
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="card">
+    <h2><span class="section-num">2</span> 🌐 <span data-t="s2title">La pàgina web</span></h2>
+    <div class="field">
+      <label data-t="web_rating_label">Valoració general de la web <span class="required-star">*</span></label>
+      <div class="stars" id="stars-web">
+        <span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span>
+      </div>
+    </div>
+    <div class="field">
+      <label data-t="nav_label">Trobes fàcilment la informació que busques?</label>
+      <div class="emoji-scale">
+        <div class="emoji-opt"><input type="radio" name="nav" id="nav1" value="Molt difícil"><label for="nav1"><span class="emo">😤</span><span data-t="nav1">Molt difícil</span></label></div>
+        <div class="emoji-opt"><input type="radio" name="nav" id="nav2" value="Difícil"><label for="nav2"><span class="emo">😕</span><span data-t="nav2">Difícil</span></label></div>
+        <div class="emoji-opt"><input type="radio" name="nav" id="nav3" value="Regular"><label for="nav3"><span class="emo">😐</span><span data-t="nav3">Regular</span></label></div>
+        <div class="emoji-opt"><input type="radio" name="nav" id="nav4" value="Fàcil"><label for="nav4"><span class="emo">🙂</span><span data-t="nav4">Fàcil</span></label></div>
+        <div class="emoji-opt"><input type="radio" name="nav" id="nav5" value="Molt fàcil"><label for="nav5"><span class="emo">😄</span><span data-t="nav5">Molt fàcil</span></label></div>
+      </div>
+    </div>
+    <div class="field">
+      <label data-t="manca_label">Quina informació trobes a faltar? (pots triar més d'una)</label>
+      <div class="pill-group">
+        <div class="pill"><input type="checkbox" id="m1" value="Calendari d'activitats"><label for="m1">📅 <span data-t="m1">Calendari</span></label></div>
+        <div class="pill"><input type="checkbox" id="m2" value="Preus i inscripcions"><label for="m2">💶 <span data-t="m2">Preus</span></label></div>
+        <div class="pill"><input type="checkbox" id="m3" value="Galeria de fotos/vídeos"><label for="m3">📷 <span data-t="m3">Fotos/Vídeos</span></label></div>
+        <div class="pill"><input type="checkbox" id="m4" value="Informació dels equips"><label for="m4">🔧 <span data-t="m4">Equipament</span></label></div>
+        <div class="pill"><input type="checkbox" id="m5" value="Horaris i accés"><label for="m5">🕐 <span data-t="m5">Horaris</span></label></div>
+        <div class="pill"><input type="checkbox" id="m6" value="Res, està completa"><label for="m6">✅ <span data-t="m6">Res</span></label></div>
+      </div>
+    </div>
+    <div class="field">
+      <label data-t="web_com_label">Comentaris sobre la web</label>
+      <textarea id="web-comentari" maxlength="400" oninput="updateCount(this,'web-count')" data-placeholder-t="web_ph"></textarea>
+      <div class="char-count"><span id="web-count">0</span>/400</div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="card">
+    <h2><span class="section-num">3</span> 🛠️ <span data-t="s3title">Les activitats</span></h2>
+    <div class="field">
+      <label data-t="part_label">Has participat en alguna activitat? <span class="required-star">*</span></label>
+      <div class="pill-group">
+        <div class="pill"><input type="radio" name="participat" id="p1" value="Sí" onclick="toggleActivitats(true)"><label for="p1">✅ <span data-t="p_si">Sí</span></label></div>
+        <div class="pill"><input type="radio" name="participat" id="p2" value="No, però m'interessa" onclick="toggleActivitats(false)"><label for="p2">👀 <span data-t="p_inter">No, però m'interessa</span></label></div>
+        <div class="pill"><input type="radio" name="participat" id="p3" value="No" onclick="toggleActivitats(false)"><label for="p3">❌ <span data-t="p_no">No</span></label></div>
+      </div>
+    </div>
+    <div id="activitats-section" style="display:none">
+      <div class="field">
+        <label data-t="act_which">Quines activitats has fet?</label>
+        <div class="pill-group">
+          <div class="pill"><input type="checkbox" id="a1" value="MakerLab"><label for="a1">🧪 MakerLab</label></div>
+          <div class="pill"><input type="checkbox" id="a2" value="AcadèmiaMaker"><label for="a2">🎓 AcadèmiaMaker</label></div>
+          <div class="pill"><input type="checkbox" id="a3" value="MakerArt"><label for="a3">🎨 MakerArt</label></div>
+          <div class="pill"><input type="checkbox" id="a4" value="Maker Sherpa"><label for="a4">🏕️ Maker Sherpa</label></div>
+          <div class="pill"><input type="checkbox" id="a5" value="Taller puntual"><label for="a5">🔩 <span data-t="a5">Taller puntual</span></label></div>
+          <div class="pill"><input type="checkbox" id="a6" value="Altra activitat"><label for="a6">➕ <span data-t="a6">Altra</span></label></div>
+        </div>
+      </div>
+      <div class="field">
+        <label data-t="act_rating_label">Valoració de les activitats</label>
+        <div class="stars" id="stars-act">
+          <span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span>
+        </div>
+      </div>
+      <div class="field">
+        <label data-t="pedag_label">Com values la qualitat pedagògica?</label>
+        <div class="emoji-scale">
+          <div class="emoji-opt"><input type="radio" name="pedagog" id="pg1" value="Molt baixa"><label for="pg1"><span class="emo">😞</span><span data-t="pg1">Molt baixa</span></label></div>
+          <div class="emoji-opt"><input type="radio" name="pedagog" id="pg2" value="Baixa"><label for="pg2"><span class="emo">😕</span><span data-t="pg2">Baixa</span></label></div>
+          <div class="emoji-opt"><input type="radio" name="pedagog" id="pg3" value="Correcta"><label for="pg3"><span class="emo">😐</span><span data-t="pg3">Correcta</span></label></div>
+          <div class="emoji-opt"><input type="radio" name="pedagog" id="pg4" value="Bona"><label for="pg4"><span class="emo">🙂</span><span data-t="pg4">Bona</span></label></div>
+          <div class="emoji-opt"><input type="radio" name="pedagog" id="pg5" value="Excel·lent"><label for="pg5"><span class="emo">🤩</span><span data-t="pg5">Excel·lent</span></label></div>
+        </div>
+      </div>
+      <div class="field">
+        <label data-t="act_com_label">Comentaris sobre les activitats</label>
+        <textarea id="act-comentari" maxlength="400" oninput="updateCount(this,'act-count')" data-placeholder-t="act_ph"></textarea>
+        <div class="char-count"><span id="act-count">0</span>/400</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="card">
+    <h2><span class="section-num">4</span> 💬 <span data-t="s4title">Valoració global</span></h2>
+    <div class="field">
+      <label data-t="recom_label">Recomanaries el MakerConvent? <span class="required-star">*</span></label>
+      <div class="emoji-scale">
+        <div class="emoji-opt"><input type="radio" name="recom" id="r1" value="Mai"><label for="r1"><span class="emo">🙅</span><span data-t="r1">Mai</span></label></div>
+        <div class="emoji-opt"><input type="radio" name="recom" id="r2" value="Poc probable"><label for="r2"><span class="emo">😶</span><span data-t="r2">Poc probable</span></label></div>
+        <div class="emoji-opt"><input type="radio" name="recom" id="r3" value="Potser"><label for="r3"><span class="emo">🤷</span><span data-t="r3">Potser</span></label></div>
+        <div class="emoji-opt"><input type="radio" name="recom" id="r4" value="Probablement"><label for="r4"><span class="emo">😊</span><span data-t="r4">Probablement</span></label></div>
+        <div class="emoji-opt"><input type="radio" name="recom" id="r5" value="Segur que sí!"><label for="r5"><span class="emo">🥳</span><span data-t="r5">Segur!</span></label></div>
+      </div>
+    </div>
+    <div class="field">
+      <label data-t="millor_label">Quina és la teva millor experiència?</label>
+      <textarea id="millor" maxlength="300" oninput="updateCount(this,'millor-count')" data-placeholder-t="millor_ph"></textarea>
+      <div class="char-count"><span id="millor-count">0</span>/300</div>
+    </div>
+    <div class="field">
+      <label data-t="millora_label">Algun suggeriment de millora?</label>
+      <textarea id="millora" maxlength="300" oninput="updateCount(this,'millora-count')" data-placeholder-t="millora_ph"></textarea>
+      <div class="char-count"><span id="millora-count">0</span>/300</div>
+    </div>
+  </div>
+
+  <button type="button" id="submit-btn" onclick="enviar()"><span data-t="submit_btn">Enviar la meva opinió 🚀</span></button>
+  <div class="sending-msg" id="sending-msg"><span data-t="sending">Enviant... ⏳</span></div>
+  <div class="error-msg" id="error-msg"><span data-t="error_msg">Hi ha hagut un error en l'enviament. Torna-ho a provar.</span></div>
+  <p style="text-align:center;font-size:0.75em;color:#aaa;margin-top:12px;" data-t="privacy">Les dades s'utilitzen únicament per millorar el MakerConvent.</p>
+</div>
+
+<div id="success">
+  <div class="big">🎉</div>
+  <h2 data-t="success_title">Moltes gràcies!</h2>
+  <p data-t="success_msg">La teva opinió és molt valuosa per al MakerConvent.<br>Junts fem l'espai millor!</p>
+  <p style="margin-top:18px;font-size:0.8em;color:#aaa;">conventagusti.com/maker · maker@conventagusti.com</p>
+  <button type="button" onclick="resetForm()" style="margin-top:20px;max-width:280px;margin-left:auto;margin-right:auto;display:block;background:#e63946;font-size:0.9em;padding:12px;">
+    <span data-t="reset_btn">Enviar una altra resposta 🔄</span>
+  </button>
+</div>
+
+<script>
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbySL0LS99Hfl3aPhtmnKn6CEeajF0RA4CCz2NZzbZADT2aHVA9TNGXZSa_PfhFVz98wmQ/exec";
+
+const T = {
+  ca: {
+    hdr_sub: "Explica'ns la teva experiència",
+    s1title: "Qui ets?", s2title: "La pàgina web", s3title: "Les activitats", s4title: "Valoració global",
+    tipus_label: "Tipus de visitant *",
+    t_infant:"Infant/Jove", t_familiar:"Familiar", t_adult:"Adult", t_edu:"Educador/a", t_vei:"Veí/Veïna", t_vis:"Visitant extern",
+    com_label: "Com has conegut el MakerConvent?",
+    c_xarxes:"Xarxes socials", c_boca:"Boca-orella", c_escola:"Escola", c_pass:"Passejant",
+    nom_label:"Nom (opcional)", nom_ph:"El teu nom...",
+    email_label:"Correu electrònic (opcional)", email_ph:"per si vols rebre resposta",
+    web_rating_label:"Valoració general de la web *",
+    nav_label:"Trobes fàcilment la informació que busques?",
+    nav1:"Molt difícil", nav2:"Difícil", nav3:"Regular", nav4:"Fàcil", nav5:"Molt fàcil",
+    manca_label:"Quina informació trobes a faltar? (pots triar més d'una)",
+    m1:"Calendari", m2:"Preus", m3:"Fotos/Vídeos", m4:"Equipament", m5:"Horaris", m6:"Res",
+    web_com_label:"Comentaris sobre la web", web_ph:"Suggeriments, millores, impressions...",
+    part_label:"Has participat en alguna activitat? *",
+    p_si:"Sí", p_inter:"No, però m'interessa", p_no:"No",
+    act_which:"Quines activitats has fet?",
+    a5:"Taller puntual", a6:"Altra",
+    act_rating_label:"Valoració de les activitats",
+    pedag_label:"Com values la qualitat pedagògica?",
+    pg1:"Molt baixa", pg2:"Baixa", pg3:"Correcta", pg4:"Bona", pg5:"Excel·lent",
+    act_com_label:"Comentaris sobre les activitats", act_ph:"Què t'ha agradat? Què milloraries?",
+    recom_label:"Recomanaries el MakerConvent? *",
+    r1:"Mai", r2:"Poc probable", r3:"Potser", r4:"Probablement", r5:"Segur!",
+    millor_label:"Quina és la teva millor experiència?", millor_ph:"Explica'ns el millor moment o descobriment...",
+    millora_label:"Algun suggeriment de millora?", millora_ph:"Idees, propostes, peticions...",
+    submit_btn:"Enviar la meva opinió 🚀",
+    sending:"Enviant... ⏳",
+    error_msg:"Hi ha hagut un error en l'enviament. Torna-ho a provar.",
+    privacy:"Les dades s'utilitzen únicament per millorar el MakerConvent.",
+    success_title:"Moltes gràcies!", success_msg:"La teva opinió és molt valuosa per al MakerConvent.<br>Junts fem l'espai millor!",
+    alert_tipus:"Si us plau, indica quin tipus de visitant ets.",
+    alert_recom:"Si us plau, indica si recomanaries el MakerConvent.",
+    alert_part:"Si us plau, indica si has participat en alguna activitat.",
+    alert_web:"Si us plau, valora la pàgina web amb les estrelles.",
+  },
+  es: {
+    hdr_sub: "Cuéntanos tu experiencia",
+    s1title: "¿Quién eres?", s2title: "La página web", s3title: "Las actividades", s4title: "Valoración global",
+    tipus_label: "Tipo de visitante *",
+    t_infant:"Niño/Joven", t_familiar:"Familiar", t_adult:"Adulto", t_edu:"Educador/a", t_vei:"Vecino/a", t_vis:"Visitante externo",
+    com_label: "¿Cómo conociste el MakerConvent?",
+    c_xarxes:"Redes sociales", c_boca:"Boca a boca", c_escola:"Escuela", c_pass:"Paseando",
+    nom_label:"Nombre (opcional)", nom_ph:"Tu nombre...",
+    email_label:"Correo electrónico (opcional)", email_ph:"por si quieres recibir respuesta",
+    web_rating_label:"Valoración general de la web *",
+    nav_label:"¿Encuentras fácilmente la información que buscas?",
+    nav1:"Muy difícil", nav2:"Difícil", nav3:"Regular", nav4:"Fácil", nav5:"Muy fácil",
+    manca_label:"¿Qué información echas en falta? (puedes elegir más de una)",
+    m1:"Calendario", m2:"Precios", m3:"Fotos/Vídeos", m4:"Equipamiento", m5:"Horarios", m6:"Nada",
+    web_com_label:"Comentarios sobre la web", web_ph:"Sugerencias, mejoras, impresiones...",
+    part_label:"¿Has participado en alguna actividad? *",
+    p_si:"Sí", p_inter:"No, pero me interesa", p_no:"No",
+    act_which:"¿En qué actividades has participado?",
+    a5:"Taller puntual", a6:"Otra",
+    act_rating_label:"Valoración de las actividades",
+    pedag_label:"¿Cómo valoras la calidad pedagógica?",
+    pg1:"Muy baja", pg2:"Baja", pg3:"Correcta", pg4:"Buena", pg5:"Excelente",
+    act_com_label:"Comentarios sobre las actividades", act_ph:"¿Qué te ha gustado? ¿Qué mejorarías?",
+    recom_label:"¿Recomendarías el MakerConvent? *",
+    r1:"Nunca", r2:"Poco probable", r3:"Quizás", r4:"Probablemente", r5:"¡Seguro!",
+    millor_label:"¿Cuál es tu mejor experiencia?", millor_ph:"Cuéntanos el mejor momento o descubrimiento...",
+    millora_label:"¿Alguna sugerencia de mejora?", millora_ph:"Ideas, propuestas, peticiones...",
+    submit_btn:"Enviar mi opinión 🚀",
+    sending:"Enviando... ⏳",
+    error_msg:"Ha habido un error al enviar. Por favor, inténtalo de nuevo.",
+    privacy:"Los datos se utilizan únicamente para mejorar el MakerConvent.",
+    success_title:"¡Muchas gracias!", success_msg:"Tu opinión es muy valiosa para el MakerConvent.<br>¡Juntos hacemos el espacio mejor!",
+    alert_tipus:"Por favor, indica qué tipo de visitante eres.",
+    alert_recom:"Por favor, indica si recomendarías el MakerConvent.",
+    alert_part:"Por favor, indica si has participado en alguna actividad.",
+    alert_web:"Por favor, valora la página web con las estrellas.",
+  }
+};
+
+let lang = 'ca';
+
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
+  const t = T[l];
+  document.getElementById('hdr-sub').textContent = t.hdr_sub;
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.dataset.t;
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  document.querySelectorAll('[data-placeholder-t]').forEach(el => {
+    const key = el.dataset['placeholder-t'] || el.getAttribute('data-placeholder-t');
+    if (t[key]) el.placeholder = t[key];
+  });
+}
+
+// Stars
+let ratingWeb = 0, ratingAct = 0;
+function setupStars(id, cb) {
+  const stars = document.querySelectorAll(`#${id} span`);
+  let val = 0;
+  stars.forEach(s => {
+    s.addEventListener('click', () => { val = parseInt(s.dataset.v); cb(val); stars.forEach(st => st.classList.toggle('active', parseInt(st.dataset.v) <= val)); updateProgress(); });
+    s.addEventListener('mouseover', () => stars.forEach(st => st.classList.toggle('active', parseInt(st.dataset.v) <= parseInt(s.dataset.v))));
+    s.addEventListener('mouseout', () => stars.forEach(st => st.classList.toggle('active', parseInt(st.dataset.v) <= val)));
+  });
+}
+setupStars('stars-web', v => ratingWeb = v);
+setupStars('stars-act', v => ratingAct = v);
+
+function toggleActivitats(show) { document.getElementById('activitats-section').style.display = show ? 'block' : 'none'; }
+function updateCount(el, cid) { document.getElementById(cid).textContent = el.value.length; updateProgress(); }
+function updateProgress() {
+  const f = [document.querySelector('input[name="tipus"]:checked'), document.querySelector('input[name="recom"]:checked'), document.querySelector('input[name="participat"]:checked'), ratingWeb > 0];
+  document.getElementById('progress').style.width = (f.filter(Boolean).length / f.length * 100) + '%';
+}
+document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el => el.addEventListener('change', updateProgress));
+
+function getChecked(name) { return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(e => e.value).join(', '); }
+function getCheckboxes(ids) { return ids.filter(id => document.getElementById(id)?.checked).map(id => document.getElementById(id).value).join(', '); }
+
+async function enviar() {
+  const t = T[lang];
+  const tipus = document.querySelector('input[name="tipus"]:checked');
+  const recom = document.querySelector('input[name="recom"]:checked');
+  const participat = document.querySelector('input[name="participat"]:checked');
+  if (!tipus) { alert(t.alert_tipus); return; }
+  if (!recom) { alert(t.alert_recom); return; }
+  if (!participat) { alert(t.alert_part); return; }
+  if (ratingWeb === 0) { alert(t.alert_web); return; }
+
+  const dades = {
+    Data: new Date().toLocaleString('ca-ES'),
+    Idioma: lang === 'ca' ? 'Català' : 'Castellano',
+    Nom: document.getElementById('nom').value || 'Anònim',
+    Email: document.getElementById('email').value,
+    Tipus_visitant: tipus.value,
+    Com_conegut: getChecked('com'),
+    Web_valoracio: ratingWeb,
+    Web_navegacio: getChecked('nav'),
+    Web_informacio_mancant: getCheckboxes(['m1','m2','m3','m4','m5','m6']),
+    Web_comentaris: document.getElementById('web-comentari').value,
+    Ha_participat: participat.value,
+    Activitats_fetes: getCheckboxes(['a1','a2','a3','a4','a5','a6']),
+    Activitats_valoracio: ratingAct || '',
+    Activitats_pedagogia: getChecked('pedagog'),
+    Activitats_comentaris: document.getElementById('act-comentari').value,
+    Recomanaria: recom.value,
+    Millor_experiencia: document.getElementById('millor').value,
+    Suggeriments_millora: document.getElementById('millora').value,
+  };
+
+  const btn = document.getElementById('submit-btn');
+  const sendingEl = document.getElementById('sending-msg');
+  const errorEl = document.getElementById('error-msg');
+  btn.disabled = true;
+  sendingEl.style.display = 'block';
+  errorEl.style.display = 'none';
+
+  try {
+    // Build a hidden form and submit to an invisible iframe
+    const iframe = document.createElement('iframe');
+    iframe.name = 'hidden_iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    const form = document.createElement('form');
+    form.method = 'GET';
+    form.action = SHEET_URL;
+    form.target = 'hidden_iframe';
+    form.style.display = 'none';
+
+    Object.entries(dades).forEach(([k, v]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = k;
+      input.value = v;
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+
+    setTimeout(() => {
+      document.body.removeChild(form);
+      document.body.removeChild(iframe);
+      document.getElementById('form-wrapper').style.display = 'none';
+      const s = document.getElementById('success');
+      s.style.display = 'block';
+      s.querySelector('[data-t="success_title"]').innerHTML = t.success_title;
+      s.querySelector('[data-t="success_msg"]').innerHTML = t.success_msg;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 2000);
+  } catch(err) {
+    btn.disabled = false;
+    sendingEl.style.display = 'none';
+    errorEl.style.display = 'block';
+    errorEl.querySelector('[data-t="error_msg"]').textContent = t.error_msg;
+  }
+}
+
+function resetForm() {
+  document.getElementById('success').style.display = 'none';
+  document.getElementById('form-wrapper').style.display = 'block';
+  document.getElementById('form-wrapper').querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el => el.checked = false);
+  document.getElementById('form-wrapper').querySelectorAll('textarea, input[type="text"], input[type="email"]').forEach(el => el.value = '');
+  document.querySelectorAll('.stars span').forEach(s => s.classList.remove('active'));
+  document.getElementById('activitats-section').style.display = 'none';
+  document.getElementById('sending-msg').style.display = 'none';
+  document.getElementById('error-msg').style.display = 'none';
+  document.getElementById('submit-btn').disabled = false;
+  document.getElementById('progress').style.width = '0%';
+  ['web-count','act-count','millor-count','millora-count'].forEach(id => document.getElementById(id).textContent = '0');
+  ratingWeb = 0; ratingAct = 0;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Init
+setLang('ca');
+</script>
+</body>
+</html>
