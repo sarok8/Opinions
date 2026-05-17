@@ -5,49 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', sans-serif; background: #f5f0eb; color: #2d2d2d; min-height: 100vh; padding: 20px; }
-  header { background: #e63946; color: white; padding: 24px 20px 18px; border-radius: 16px; margin-bottom: 16px; text-align: center; }
+  body { font-family: 'Segoe UI', sans-serif; background: #F8F6EC; color: #1D2327; min-height: 100vh; padding: 20px; }
+  header { background: #004237; color: #F8F6EC; padding: 24px 20px 18px; border-radius: 16px; margin-bottom: 16px; text-align: center; }
   header h1 { font-size: 1.6em; letter-spacing: 1px; }
   header p { font-size: 0.9em; margin-top: 6px; opacity: 0.9; }
-  .badge { display: inline-block; background: rgba(255,255,255,0.25); border-radius: 20px; padding: 3px 12px; font-size: 0.75em; margin-top: 8px; letter-spacing: 1px; }
+  .badge { display: inline-block; background: rgba(245,214,61,0.25); border-radius: 20px; padding: 3px 12px; font-size: 0.75em; margin-top: 8px; letter-spacing: 1px; color: #F5D63D; }
   .lang-bar { display: flex; justify-content: center; gap: 10px; margin-bottom: 16px; }
-  .lang-btn { padding: 7px 22px; border-radius: 20px; border: 2px solid #e63946; background: white; color: #e63946; font-weight: 700; font-size: 0.88em; cursor: pointer; transition: all 0.15s; }
-  .lang-btn.active { background: #e63946; color: white; }
-  .card { background: white; border-radius: 14px; padding: 22px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
-  .card h2 { font-size: 1em; color: #e63946; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-  label { display: block; font-size: 0.88em; margin-bottom: 6px; color: #555; font-weight: 600; }
-  input[type="text"], input[type="email"], textarea, select { width: 100%; border: 2px solid #e0d8d0; border-radius: 9px; padding: 10px 12px; font-size: 0.9em; outline: none; transition: border 0.2s; background: #faf9f7; font-family: inherit; }
-  input:focus, textarea:focus, select:focus { border-color: #e63946; background: white; }
+  .lang-btn { padding: 7px 22px; border-radius: 20px; border: 2px solid #004237; background: white; color: #004237; font-weight: 700; font-size: 0.88em; cursor: pointer; transition: all 0.15s; }
+  .lang-btn.active { background: #004237; color: #F5D63D; }
+  .card { background: white; border-radius: 14px; padding: 22px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(0,66,55,0.08); border-left: 4px solid #004237; }
+  .card h2 { font-size: 1em; color: #004237; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  label { display: block; font-size: 0.88em; margin-bottom: 6px; color: #353018; font-weight: 600; }
+  input[type="text"], input[type="email"], textarea, select { width: 100%; border: 2px solid #B1BAB5; border-radius: 9px; padding: 10px 12px; font-size: 0.9em; outline: none; transition: border 0.2s; background: #F8F6EC; font-family: inherit; color: #1D2327; }
+  input:focus, textarea:focus, select:focus { border-color: #004237; background: white; }
   textarea { resize: vertical; min-height: 80px; }
   .field { margin-bottom: 16px; }
   .stars { display: flex; gap: 6px; margin-top: 4px; }
-  .stars span { font-size: 1.9em; cursor: pointer; color: #d0c8c0; transition: color 0.15s, transform 0.1s; line-height: 1; }
-  .stars span.active { color: #f4a261; }
+  .stars span { font-size: 1.9em; cursor: pointer; color: #C3C4C7; transition: color 0.15s, transform 0.1s; line-height: 1; }
+  .stars span.active { color: #F5D63D; }
   .stars span:hover { transform: scale(1.2); }
   .pill-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
   .pill input { display: none; }
-  .pill label { display: inline-block; padding: 6px 14px; border-radius: 20px; border: 2px solid #e0d8d0; cursor: pointer; font-size: 0.83em; font-weight: 600; color: #666; transition: all 0.15s; margin: 0; }
-  .pill input:checked + label { background: #e63946; border-color: #e63946; color: white; }
-  .pill label:hover { border-color: #e63946; color: #e63946; }
+  .pill label { display: inline-block; padding: 6px 14px; border-radius: 20px; border: 2px solid #B1BAB5; cursor: pointer; font-size: 0.83em; font-weight: 600; color: #8C8F94; transition: all 0.15s; margin: 0; }
+  .pill input:checked + label { background: #004237; border-color: #004237; color: #F5D63D; }
+  .pill label:hover { border-color: #004237; color: #004237; }
   .emoji-scale { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
   .emoji-opt input { display: none; }
-  .emoji-opt label { display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 6px 10px; border: 2px solid #e0d8d0; border-radius: 12px; font-size: 0.75em; color: #888; transition: all 0.15s; margin: 0; min-width: 54px; }
+  .emoji-opt label { display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 6px 10px; border: 2px solid #B1BAB5; border-radius: 12px; font-size: 0.75em; color: #8C8F94; transition: all 0.15s; margin: 0; min-width: 54px; }
   .emoji-opt label .emo { font-size: 1.8em; }
-  .emoji-opt input:checked + label { border-color: #e63946; background: #fff0f0; color: #e63946; font-weight: 700; }
-  button[type="button"] { width: 100%; background: #e63946; color: white; border: none; border-radius: 12px; padding: 15px; font-size: 1.05em; font-weight: 700; cursor: pointer; letter-spacing: 0.5px; transition: background 0.2s, transform 0.1s; }
-  button[type="button"]:hover { background: #c1121f; transform: translateY(-1px); }
-  button[type="button"]:disabled { background: #ccc; cursor: not-allowed; transform: none; }
-  #success { display: none; text-align: center; padding: 40px 20px; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .emoji-opt input:checked + label { border-color: #004237; background: #EFEFEF; color: #004237; font-weight: 700; }
+  button[type="button"] { width: 100%; background: #004237; color: #F5D63D; border: none; border-radius: 12px; padding: 15px; font-size: 1.05em; font-weight: 700; cursor: pointer; letter-spacing: 0.5px; transition: background 0.2s, transform 0.1s; }
+  button[type="button"]:hover { background: #57002B; color: white; transform: translateY(-1px); }
+  button[type="button"]:disabled { background: #C3C4C7; color: white; cursor: not-allowed; transform: none; }
+  #success { display: none; text-align: center; padding: 40px 20px; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,66,55,0.08); border-left: 4px solid #004237; }
   #success .big { font-size: 3em; }
-  #success h2 { color: #e63946; margin: 12px 0 8px; }
-  #success p { color: #666; font-size: 0.9em; }
-  .required-star { color: #e63946; }
-  .section-num { background: #e63946; color: white; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.78em; font-weight: 700; flex-shrink: 0; }
-  .progress-bar { background: #e0d8d0; border-radius: 10px; height: 6px; margin-bottom: 20px; overflow: hidden; }
-  .progress-fill { background: #e63946; height: 100%; width: 0%; border-radius: 10px; transition: width 0.4s; }
-  .char-count { font-size: 0.75em; color: #aaa; text-align: right; margin-top: 2px; }
-  .sending-msg { text-align:center; font-size:0.9em; color:#888; margin-top:10px; display:none; }
-  .error-msg { text-align:center; font-size:0.85em; color:#e63946; margin-top:10px; display:none; background:#fff0f0; padding:10px; border-radius:8px; }
+  #success h2 { color: #004237; margin: 12px 0 8px; }
+  #success p { color: #353018; font-size: 0.9em; }
+  .required-star { color: #57002B; }
+  .section-num { background: #004237; color: #F5D63D; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.78em; font-weight: 700; flex-shrink: 0; }
+  .progress-bar { background: #CCCC99; border-radius: 10px; height: 6px; margin-bottom: 20px; overflow: hidden; }
+  .progress-fill { background: #004237; height: 100%; width: 0%; border-radius: 10px; transition: width 0.4s; }
+  .char-count { font-size: 0.75em; color: #8C8F94; text-align: right; margin-top: 2px; }
+  .sending-msg { text-align:center; font-size:0.9em; color:#8C8F94; margin-top:10px; display:none; }
+  .error-msg { text-align:center; font-size:0.85em; color:#57002B; margin-top:10px; display:none; background:#E6B3B3; padding:10px; border-radius:8px; }
 </style>
 </head>
 <body>
