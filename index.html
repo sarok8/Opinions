@@ -388,28 +388,10 @@ async function enviar() {
   errorEl.style.display = 'none';
 
   try {
-    // Build a hidden form and submit to an invisible iframe
-    const iframe = document.createElement('iframe');
-    iframe.name = 'hidden_iframe';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = SHEET_URL;
-    form.target = 'hidden_iframe';
-    form.enctype = 'text/plain';
-    form.style.display = 'none';
-
-    // Send as a single JSON field
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = JSON.stringify(dades);
-    input.value = '';
-    form.appendChild(input);
-
-    document.body.appendChild(form);
-    form.submit();
+      const params = new URLSearchParams(dades).toString();
+    const url = SHEET_URL + '?' + params;
+    const img = new Image();
+    img.src = url;
 
     setTimeout(() => {
       document.body.removeChild(form);
