@@ -395,18 +395,18 @@ async function enviar() {
     document.body.appendChild(iframe);
 
     const form = document.createElement('form');
-    form.method = 'GET';
+    form.method = 'POST';
     form.action = SHEET_URL;
     form.target = 'hidden_iframe';
+    form.enctype = 'text/plain';
     form.style.display = 'none';
 
-    Object.entries(dades).forEach(([k, v]) => {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = k;
-      input.value = v;
-      form.appendChild(input);
-    });
+    // Send as a single JSON field
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = JSON.stringify(dades);
+    input.value = '';
+    form.appendChild(input);
 
     document.body.appendChild(form);
     form.submit();
