@@ -390,22 +390,10 @@ async function enviar() {
   try {
       const params = new URLSearchParams(dades).toString();
     const url = SHEET_URL + '?' + params;
-
-    let intents = 0;
-    function enviaImatge() {
-      intents++;
-      const img = new Image();
-      img.onload = img.onerror = () => {
-        clearTimeout(timer);
-        mostrarExit();
-      };
-      img.src = url + '&t=' + Date.now();
-      // Si en 4 segons no respon, torna a intentar (màx 3 vegades)
-      var timer = setTimeout(() => {
-        if (intents < 3) enviaImatge();
-        else mostrarExit(); // Mostra èxit igualment
-      }, 4000);
-    }
+    const img = new Image();
+    img.src = url + '&t=' + Date.now();
+    // Mostra èxit després de 2 segons independentment
+    setTimeout(mostrarExit, 2000);
 
     function mostrarExit() {
       document.getElementById('form-wrapper').style.display = 'none';
@@ -415,8 +403,6 @@ async function enviar() {
       s.querySelector('[data-t="success_msg"]').innerHTML = t.success_msg;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
-    enviaImatge();
 
     setTimeout(() => {
       document.body.removeChild(form);
