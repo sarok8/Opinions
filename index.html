@@ -390,8 +390,7 @@ async function enviar() {
   try {
       const params = new URLSearchParams(dades).toString();
     const url = SHEET_URL + '?' + params;
-    const img = new Image();
-    img.src = url;
+    navigator.sendBeacon(url);
 
     setTimeout(() => {
       document.body.removeChild(form);
